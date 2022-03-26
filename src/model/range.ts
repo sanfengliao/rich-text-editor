@@ -5,6 +5,16 @@ export class Range {
   constructor(public start: Point, public end: Point) {
   }
 
+  insertText(text: string) {
+    if (this.isCollapsed()) {
+      this.start.insertText(text);
+      this.end = this.start;
+    } else {
+      this.start.insertText(text);
+      this.end.insertText(text);
+    }
+  }
+
   /**
    * Check if a range is exactly equal to another.
    */

@@ -7,6 +7,10 @@ export class Point {
 
   }
 
+  insertText(text: string) {
+    this.offset += text.length;
+  }
+
   /**
    * Compare a point to another, returning an integer indicating whether the
    * point was before(-1), at(0), or after(1) the other.
@@ -45,8 +49,11 @@ export class Point {
 
   equals(another: Point): boolean {
     // PERF: ensure the offsets are equal first since they are cheaper to check.
+
     return (
-      this.offset === another.offset && Path.equals(this.path, another.path)
+      this === another
+      ||
+      (this.offset === another.offset && Path.equals(this.path, another.path))
     )
   };
 

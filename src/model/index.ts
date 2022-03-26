@@ -4,3 +4,4 @@ export * from './element';
 export * from './path';
 export * from './point';
 export * from './range';
+export * from './node';
