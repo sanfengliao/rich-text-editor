@@ -1,8 +1,7 @@
 import { Element } from './element';
-import { Node } from './node';
-import { BaseInsertTextOperation } from './operation';
+import { Leaf } from './leaf';
 
-export class TextNode extends Node {
+export class TextNode extends Leaf {
 
   constructor(parent: Element, public text: string = '') {
     super(parent)

@@ -1,4 +1,5 @@
 import { Element } from './element'
+import { Path } from './path';
 export class Node {
   constructor(
     public parent: Element | null,
@@ -11,7 +12,13 @@ export class Node {
     return this.parent.children.indexOf(this);
   }
 
+  setParent(parent: Element) {
+    this.parent = parent;
+  }
+
   toJSON(): object {
     throw new Error('toJSON is not implment')
   }
 }
+
+export type NodeEntry<T extends Node = Node> = [T, Path]
