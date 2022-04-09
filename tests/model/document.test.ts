@@ -1,5 +1,7 @@
-import { assert, describe, expect, it, test } from 'vitest'
-import { Document } from '../../src/model/document'
+import {
+  describe, expect, it,
+} from 'vitest';
+import { Document } from '../../src/model/document';
 
 // Edit an assertion and save to see HMR in action
 describe('test model/document', () => {
@@ -7,11 +9,11 @@ describe('test model/document', () => {
     expect(Document.createEmptyDocument().toJSON()).toStrictEqual([
       [
         {
-          text: ''
-        }
-      ]
-    ])
-  })
+          text: '',
+        },
+      ],
+    ]);
+  });
 
   it('insert Text', () => {
     const doc = Document.createEmptyDocument();
@@ -19,10 +21,9 @@ describe('test model/document', () => {
     expect(doc.toJSON()).toStrictEqual([
       [
         {
-          text: 'abc'
-        }
-      ]
-    ])
-    
-  })
-})
+          text: 'abc',
+        },
+      ],
+    ]);
+  });
+});

@@ -1,9 +1,11 @@
-import { BaseParentNode } from './base-parent'
+import { BaseParentNode } from './base-parent';
 import { Path } from './path';
+
 export class Node {
   constructor(
     public parent: BaseParentNode | null,
-  ) {}
+  ) {
+  }
 
   get index() {
     if (!this.parent) {
@@ -17,7 +19,7 @@ export class Node {
   }
 
   toJSON(): object {
-    throw new Error('toJSON is not implment')
+    throw new Error('toJSON is not implment');
   }
 }
 

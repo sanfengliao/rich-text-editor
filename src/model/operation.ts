@@ -1,5 +1,5 @@
-import { Node, Path, Range } from '.'
-import { ExtendedType } from '../custom-types'
+import { Node, Path, Range } from '.';
+import { ExtendedType } from '../custom-types';
 
 export type BaseInsertNodeOperation = {
   type: 'insert_node'
