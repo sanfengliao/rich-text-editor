@@ -2,11 +2,11 @@ import { isLeaf } from './leaf';
 import { Node, NodeEntry } from './node'
 import { Path } from './path';
 
-export class Element extends Node {
+export class BaseParentNode extends Node {
 
   children: Node[] = []
   
-  constructor(public parent: Element | null) {
+  constructor(public parent: BaseParentNode | null) {
     super(parent);
   }
 
@@ -24,7 +24,7 @@ export class Element extends Node {
     for (let i = 0; i < path.length; i++) {
       const p = path[i]
 
-      if (!isElement(node)) {
+      if (!isBaseParentNode(node)) {
         throw new Error(
           `Cannot find a descendant at path [${path}] in node`
         )
@@ -40,10 +40,10 @@ export class Element extends Node {
    * @param path 
    * @returns 
    */
-  ancestor(path: Path): Element {
+  ancestor(path: Path): BaseParentNode {
     const node = this.get(path)
 
-    if (!isElement(node)) {
+    if (!isBaseParentNode(node)) {
       throw new Error(
         `Cannot get the ancestor node at path [${path}] because it refers to a text node instead: ${node}`
       )
@@ -79,7 +79,7 @@ export class Element extends Node {
    * @param index 
    * @returns 
    */
-  child(index: number) {
+  childAt(index: number) {
     const c = this.children[index]
     if (c == null) {
       throw new Error(
@@ -91,22 +91,23 @@ export class Element extends Node {
     return c
   }
 
-  /**
+ /**
    * Iterate over the children of a node at a specific path.
    */
+
   *childrenAt(
     path: Path,
     options: {
       reverse?: boolean
     } = {}
-  ){
+  ) {
     const { reverse = false } = options
     const ancestor = this.ancestor(path)
     const { children } = ancestor
     let index = reverse ? children.length - 1 : 0
 
     while (reverse ? index >= 0 : index < children.length) {
-      const child = ancestor.child(index)
+      const child = ancestor.childAt(index)
       const childPath = path.concat(index)
       yield [child, childPath]
       index = reverse ? index - 1 : index + 1
@@ -119,7 +120,7 @@ export class Element extends Node {
     for (let i = 0; i < path.length; i++) {
       const p = path[i]
 
-      if (!isElement(node) || !node.children[p]) {
+      if (!isBaseParentNode(node) || !node.children[p]) {
         return false
       }
 
@@ -151,7 +152,7 @@ export class Element extends Node {
     let n = this.get(p)
 
     while (n) {
-      if (!isElement(n) || n.children.length === 0) {
+      if (!isBaseParentNode(n) || n.children.length === 0) {
         break
       } else {
         const i = n.children.length - 1
@@ -162,12 +163,17 @@ export class Element extends Node {
     return [n, p]
   }
 
+  /**
+   * 获取路径下第一个节点
+   * @param path 
+   * @returns 
+   */
   firstAt(path: Path) {
     const p = path.slice()
     let n = this.get(p)
 
     while (n) {
-      if (!isElement(n) || n.children.length === 0) {
+      if (!isBaseParentNode(n) || n.children.length === 0) {
         break
       } else {
         n = n.children[0]
@@ -197,7 +203,6 @@ export class Element extends Node {
    */
 
    *levels(
-    root: Node,
     path: Path,
     options: {
       reverse?: boolean
@@ -209,21 +214,28 @@ export class Element extends Node {
     }
   }
 
-  *nodes(
+  /**
+   * Return a generator of all the node entries of a root node. Each entry is
+   * returned as a `[Node, Path]` tuple, with the path referring to the node's
+   * position inside the root node.
+   */
+
+   *nodes(
     options: {
       from?: Path
       to?: Path
+      reverse?: boolean
       pass?: (entry: NodeEntry) => boolean
     } = {}
   ): Generator<NodeEntry, void, undefined> {
-    const { pass } = options
+    const { pass, reverse = false } = options
     const { from = [], to } = options
     const visited = new Set()
     let p: Path = []
-    let n: Node = this;
+    let n: Node = this
 
     while (true) {
-      if (to && Path.isAfter(p, to)) {
+      if (to && (reverse ? Path.isBefore(p, to) : Path.isAfter(p, to))) {
         break
       }
 
@@ -234,14 +246,13 @@ export class Element extends Node {
       // If we're allowed to go downward and we haven't descended yet, do.
       if (
         !visited.has(n) &&
-        isElement(n) &&
+        isBaseParentNode(n) &&
         n.children.length !== 0 &&
-        (!pass || pass([n, p]) === false)
+        (pass == null || pass([n, p]) === false)
       ) {
         visited.add(n)
-        let nextIndex =  0
+        let nextIndex = reverse ? n.children.length - 1 : 0
 
-        // 有点难理解
         if (Path.isAncestor(p, from)) {
           nextIndex = from[p.length]
         }
@@ -257,9 +268,19 @@ export class Element extends Node {
       }
 
       // If we're going forward...
-      const newPath = Path.next(p)
+      if (!reverse) {
+        const newPath = Path.next(p)
 
-      if (this.has(newPath)) {
+        if (this.has(newPath)) {
+          p = newPath
+          n = this.get(p)
+          continue
+        }
+      }
+
+      // If we're going backward...
+      if (reverse && p[p.length - 1] !== 0) {
+        const newPath = Path.previous(p)
         p = newPath
         n = this.get(p)
         continue
@@ -273,11 +294,12 @@ export class Element extends Node {
   }
 
 
+
   toJSON() {
     return this.children.map(node => node.toJSON())
   }
 }
 
-export function isElement(val: any): val is Element {
-  return val instanceof Element;
+export function isBaseParentNode(val: any): val is BaseParentNode {
+  return val instanceof BaseParentNode;
 }

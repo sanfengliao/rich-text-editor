@@ -2,13 +2,13 @@ import { isTextNode, TextNode } from './text-node';
 import { Range } from './range';
 import { Point } from './point';
 import { Path } from './path';
-import { Element } from './element';
+import { BaseParentNode } from './base-parent';
 
-export class Document extends Element {
+export class Document extends BaseParentNode {
 
   static createEmptyDocument() {
     const doc = new Document();
-    const ele = new Element(doc)
+    const ele = new BaseParentNode(doc)
     ele.append(new TextNode(ele))
     doc.append(ele);
     const point = new Point([0, 0], 0)

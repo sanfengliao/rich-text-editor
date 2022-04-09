@@ -1,8 +1,8 @@
-import { Element } from './element'
+import { BaseParentNode } from './base-parent'
 import { Path } from './path';
 export class Node {
   constructor(
-    public parent: Element | null,
+    public parent: BaseParentNode | null,
   ) {}
 
   get index() {
@@ -12,7 +12,7 @@ export class Node {
     return this.parent.children.indexOf(this);
   }
 
-  setParent(parent: Element) {
+  setParent(parent: BaseParentNode) {
     this.parent = parent;
   }
 

@@ -1,9 +1,9 @@
-import { Element } from './element';
+import { BaseParentNode } from './base-parent';
 import { Leaf } from './leaf';
 
 export class TextNode extends Leaf {
 
-  constructor(parent: Element, public text: string = '') {
+  constructor(parent: BaseParentNode, public text: string = '') {
     super(parent)
   }
 
