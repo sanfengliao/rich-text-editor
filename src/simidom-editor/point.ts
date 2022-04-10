@@ -51,8 +51,8 @@ export class Point {
     // PERF: ensure the offsets are equal first since they are cheaper to check.
 
     return (
-      this === another
-      || (this.offset === another.offset && Path.equals(this.path, another.path))
+      this === another ||
+      (this.offset === another.offset && Path.equals(this.path, another.path))
     );
   }
 

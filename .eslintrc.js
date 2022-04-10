@@ -31,6 +31,6 @@ module.exports = {
       functions: 'always-multiline',
     }],
     'no-useless-constructor': 'off',
-    'operator-linebreak': ['before', 'error'],
+    'no-redeclare': 'off',
   },
 };

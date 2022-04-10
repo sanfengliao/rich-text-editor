@@ -12,6 +12,10 @@ export class TextNode extends Leaf {
     this.text = before + text + after;
   }
 
+  get length(): number {
+    return this.text.length;
+  }
+
   toJSON() {
     return {
       text: this.text,

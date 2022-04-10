@@ -1,5 +1,6 @@
-import { Node, Path, Range } from '.';
+import { Path, Range } from '.';
 import { ExtendedType } from '../custom-types';
+import { Node } from '../model';
 
 export type BaseInsertNodeOperation = {
   type: 'insert_node'

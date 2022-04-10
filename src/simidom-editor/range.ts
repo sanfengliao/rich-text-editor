@@ -21,8 +21,8 @@ export class Range {
   equals(another: Range): boolean {
     const { start, end } = this;
     return (
-      start.equals(another.start)
-      && end.equals(another.end)
+      start.equals(another.start) &&
+      end.equals(another.end)
     );
   }
 

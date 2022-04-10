@@ -1,5 +1,4 @@
 export type Path = number[];
-
 export const Path = {
   /**
    * 给定一个path的所有祖先的path，不包括他自己
@@ -173,8 +172,8 @@ export const Path = {
    */
   isPath(value: any): value is Path {
     return (
-      Array.isArray(value)
-      && (value.length === 0 || typeof value[0] === 'number')
+      Array.isArray(value) &&
+      (value.length === 0 || typeof value[0] === 'number')
     );
   },
 
